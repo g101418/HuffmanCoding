@@ -9,7 +9,7 @@
 
 typedef struct huffman_tree_node
 {
-    char letter; //编码的该字母
+    unsigned char letter; //编码的该字母
     int value;   //节点权重
 
     struct huffman_tree_node *parent;       //父节点
@@ -34,7 +34,7 @@ int hash_table[HASH_TABLE_SIZE];
 // TODO 哈希表构建：hash, init, insert, search, alter*, add_letter_dict
 // ! 哈希表存储的是字典索引数组中的下表
 
-unsigned int hash(char key)
+unsigned int hash(unsigned char key)
 {
     return ((unsigned int)key) % HASH_TABLE_SIZE;
 }
@@ -53,7 +53,7 @@ void init()
     }
 }
 
-void insert_hash_table(char key, int position)
+void insert_hash_table(unsigned char key, int position)
 {
     int addr = hash(key);
     while (hash_table[addr] != -1)
@@ -63,7 +63,7 @@ void insert_hash_table(char key, int position)
     hash_table[addr] = position;
 }
 
-int search_hash_table(char key)
+int search_hash_table(unsigned char key)
 {
     int addr = hash(key);
     while (1)
@@ -78,7 +78,7 @@ int search_hash_table(char key)
 }
 
 // 同时填充list和hash_list，初次填充
-void add_letter_dict(int position, char letter, int value)
+void add_letter_dict(int position, unsigned char letter, int value)
 {
     TreeNode *new_node = (TreeNode *)malloc(sizeof(TreeNode));
     new_node->letter = letter;
@@ -352,7 +352,7 @@ void compress(const char *filename)
 
     // 写入文本压缩后编码
     fwrite(&codes_count, sizeof(long), 1, fout);
-    fwrite(dest_codes, sizeof(unsigned char), char_count, fout);
+    fwrite(dest_codes, sizeof(char), char_count, fout);
 
     // ! 文件结构为 {nodes_count, [{节点编码结构}, ...], 文本编码长度, 文本编码}
     fclose(fout);
@@ -364,7 +364,7 @@ int main(int argc, char *argv[])
     init();
     build_list(argv[1]);
     TreeNode *root_node = build_huffman_tree();
-    gen_code(root_node, 0, "");
+    gen_code(root_node, 0, "\0");
     compress(argv[1]);
     return 0;
 }

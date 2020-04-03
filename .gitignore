@@ -5,3 +5,5 @@
 *.json
 *.plist
 *.dSYM
+a.c
+a

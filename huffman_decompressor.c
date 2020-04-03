@@ -160,6 +160,7 @@ void decompress(const char *filename, const char *writefilename)
             return;
         }
     }
+
     fread(&codes_count, sizeof(long), 1, fin);
 
     unsigned char *dest_char = (unsigned char *)malloc(sizeof(char) * codes_count);
@@ -168,6 +169,7 @@ void decompress(const char *filename, const char *writefilename)
         dest_char[i] = 0;
     }
     int curr_subchar_index = 0;
+    int curr_destchar_index = 0;
     unsigned char curr_char;
     char curr_bits[MAX_LIST_LEN] = {0};
     for (int i = 0; i < codes_count; i++)
@@ -192,11 +194,14 @@ void decompress(const char *filename, const char *writefilename)
         if (addr != -1)
         {
             // 匹配到
-            unsigned char temp[2] = {0};
-            temp[0] = hash_list[addr]->letter;
-            temp[1] = '\0';
-            strcat((char *)dest_char, (char *)temp);
-            strcpy(curr_bits, "\0");
+            dest_char[curr_destchar_index] = hash_list[addr]->letter;
+            curr_destchar_index += 1;
+            for (int k = 0; k < MAX_LIST_LEN; k++)
+            {
+                if (curr_bits[k] == 0)
+                    break;
+                curr_bits[k] = 0;
+            }
         }
 
         curr_subchar_index += 1;
@@ -211,7 +216,7 @@ void decompress(const char *filename, const char *writefilename)
         perror("open failed!");
         exit(1);
     }
-    fwrite(dest_char, sizeof(char), strlen((char *)dest_char), fout);
+    fwrite(dest_char, sizeof(char), curr_destchar_index, fout);
     fclose(fout);
 }
 
