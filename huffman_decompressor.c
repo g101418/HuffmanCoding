@@ -160,7 +160,6 @@ void decompress(const char *filename, const char *writefilename)
             return;
         }
     }
-
     fread(&codes_count, sizeof(long), 1, fin);
 
     unsigned char *dest_char = (unsigned char *)malloc(sizeof(char) * codes_count);
