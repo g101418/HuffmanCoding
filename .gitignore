@@ -1,0 +1,7 @@
+*.compress
+*.decompress.txt
+*.tex
+*.pdf
+*.json
+*.plist
+*.dSYM
