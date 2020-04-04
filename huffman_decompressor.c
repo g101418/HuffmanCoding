@@ -237,5 +237,6 @@ int main(int argc, char *argv[])
 {
     init();
     decompress(argv[1], argv[2]);
+    free_hash_list();
     return 0;
 }
