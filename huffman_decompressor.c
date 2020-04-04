@@ -217,6 +217,20 @@ void decompress(const char *filename, const char *writefilename)
     }
     fwrite(dest_char, sizeof(char), curr_destchar_index, fout);
     fclose(fout);
+    free(dest_char);
+    dest_char = NULL;
+}
+
+void free_hash_list()
+{
+    for (int i = 0; i < MAX_LIST_LEN; i++)
+        if (hash_list[i] != NULL)
+        {
+            free(hash_list[i]);
+            hash_list[i] = NULL;
+        }
+        else
+            break;
 }
 
 int main(int argc, char *argv[])

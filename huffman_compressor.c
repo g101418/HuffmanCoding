@@ -10,7 +10,7 @@
 typedef struct huffman_tree_node
 {
     unsigned char letter; //编码的该字母
-    int value;   //节点权重
+    int value;            //节点权重
 
     struct huffman_tree_node *parent;       //父节点
     struct huffman_tree_node *left, *right; //左右孩子节点
@@ -356,6 +356,18 @@ void compress(const char *filename)
 
     // ! 文件结构为 {nodes_count, [{节点编码结构}, ...], 文本编码长度, 文本编码}
     fclose(fout);
+    free(dest_codes);
+    dest_codes = NULL;
+}
+
+void free_tree_mem(TreeNode *root)
+{
+    if (root->left != NULL)
+        free_tree_mem(root->left);
+    if (root->right != NULL)
+        free_tree_mem(root->right);
+    free(root);
+    root = NULL;
 }
 
 int main(int argc, char *argv[])
@@ -366,5 +378,6 @@ int main(int argc, char *argv[])
     TreeNode *root_node = build_huffman_tree();
     gen_code(root_node, 0, "\0");
     compress(argv[1]);
+    free_tree_mem(root_node);
     return 0;
 }
